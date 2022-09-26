@@ -4,6 +4,7 @@
     package="com.example.pizzapanda">
 
     <application
+        android:name=".PizzaPandaApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,9 +15,8 @@
         android:theme="@style/Theme.PizzaPanda"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.PizzaPanda">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
