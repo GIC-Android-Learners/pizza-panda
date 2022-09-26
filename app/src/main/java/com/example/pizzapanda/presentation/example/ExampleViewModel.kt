@@ -6,9 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pizzapanda.domain.usecase.ExampleUseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ExampleViewModel(private var exampleUseCases: ExampleUseCases) : ViewModel() {
+@HiltViewModel
+class ExampleViewModel @Inject constructor(private var exampleUseCases: ExampleUseCases) :
+    ViewModel() {
     private val _exampleState: MutableState<ExampleState> = mutableStateOf(ExampleState(listOf()))
     val exampleState: State<ExampleState> = _exampleState
 

@@ -25,24 +25,17 @@ import com.example.pizzapanda.presentation.example.ExampleViewModel
 import com.example.pizzapanda.presentation.example.components.ExampleScreen
 import com.example.pizzapanda.presentation.util.Screen
 import com.example.pizzapanda.ui.theme.PizzaPandaTheme
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var viewModel: ExampleViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Temp
-        val db = Room.databaseBuilder(
-            application,
-            PizzaDatabase::class.java, PizzaDatabase.DB_NAME
-        ).build()
-
-        val repository = ExampleRoomRepository(db.exampleDao())
-
-        val useCases = ExampleUseCases(
-            getExamples = GetExamplesUseCase(repository),
-            addExample = AddExampleUseCase(repository)
-        )
-        val viewModel = ExampleViewModel(useCases)
 
         setContent {
             PizzaPandaTheme {
