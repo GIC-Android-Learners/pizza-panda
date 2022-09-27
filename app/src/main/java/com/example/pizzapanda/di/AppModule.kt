@@ -61,7 +61,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideOrderDetailsRepository(database: PizzaDatabase): OrderDetailsRepository {
-        return OrderDetailsRoomRepository(database.orderDao(), database.orderDetailsDao())
+        return OrderDetailsRoomRepository(database.orderDetailsDao())
     }
 
     @Provides
