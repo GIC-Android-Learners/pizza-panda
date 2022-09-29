@@ -1,16 +1,13 @@
 package com.example.pizzapanda.presentation.main.mainComponents
 
-import android.telecom.Call
-import androidx.compose.foundation.BorderStroke
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -21,19 +18,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.room.Index
 import com.example.pizzapanda.R
-import kotlinx.coroutines.launch
+import com.example.pizzapanda.presentation.user.components.PizzaList
+
 
 @Composable
-fun SurfaceControl(goToAdmin: () -> Unit) {
+fun SurfaceControl(
+    goToAdmin: () -> Unit,
+    goToPizzaList: () -> Unit,
+    goToJuiceList: () -> Unit,
+    pizzaJuiceFlag: String
+) {
     Row(modifier = Modifier.clip(shape = RoundedCornerShape(25.dp))) {
         Surface(
             modifier = Modifier.size(400.dp, 750.dp),
@@ -44,7 +42,9 @@ fun SurfaceControl(goToAdmin: () -> Unit) {
         }
         Surface(
             modifier = Modifier.size(1000.dp, 750.dp),
-        ) { CoverImagePartition2() }
+        ) {
+            CoverImagePartition2({ goToPizzaList() }, { goToJuiceList() }, pizzaJuiceFlag)
+        }
     }
 }
 
@@ -58,7 +58,7 @@ fun CoverImagePartition1(goToAdmin: () -> Unit) {
         Surface(modifier = Modifier.background(Color("#ffead1".toColorInt()))) {
             Card(elevation = 20.dp, backgroundColor = Color("#ffead1".toColorInt())) {
                 Image(
-                    painter = painterResource(R.drawable.cover_3),
+                    painter = painterResource(R.drawable.cover_8),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -71,7 +71,7 @@ fun CoverImagePartition1(goToAdmin: () -> Unit) {
 }
 
 @Composable
-fun CoverImagePartition2() {
+fun CoverImagePartition2(goToPizzaList:()->Unit,goToJuiceList :()->Unit,pizzaJuiceFlag : String) {
     Surface(modifier = Modifier.background(Color("#ffead1".toColorInt())))
     {
         Column(
@@ -79,7 +79,7 @@ fun CoverImagePartition2() {
                 .background(Color("#ffead1".toColorInt()))
                 .padding(50.dp)
         ) {
-            OrderButton()
+            OrderButton({ goToPizzaList() }, { goToJuiceList() })
             Text(
                 text = "Pizza Information",
                 fontWeight = FontWeight.ExtraBold,
@@ -88,30 +88,7 @@ fun CoverImagePartition2() {
                 color = Color("#004a4d".toColorInt()),
                 modifier = Modifier.padding(0.dp, 50.dp, 20.dp, 0.dp)
             )
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                items(3) {
-                    ItemCard()
-                }
-            }
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(25.dp),
-                modifier = Modifier
-                    .background(Color.Transparent)
-                    .padding(0.dp, 20.dp, 0.dp, 0.dp)
-            ) {
-                items(3) {
-                    Text(
-                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp,
-                        modifier = Modifier
-                            .size(180.dp, 60.dp)
-                            .border(2.dp, Color.Cyan, shape = RoundedCornerShape(20.dp))
-                            .padding(10.dp)
-                    )
-                }
-            }
+           PizzaList(pizzaJuiceFlag = pizzaJuiceFlag)
         }
     }
 }
@@ -266,8 +243,9 @@ fun ScaffoldButtons(goToAdmin: () -> Unit, btn1: String, btn2: String) {
     }
 }
 
+
 @Composable
-fun OrderButton() {
+fun OrderButton(goToPizzaList:()->Unit,goToJuiceList :()->Unit) {
     Column {
         Text(
             text = "Food Information",
@@ -278,7 +256,7 @@ fun OrderButton() {
         )
         Row {
             ExtendedFloatingActionButton(
-                onClick = { },
+                onClick = { goToPizzaList() },
                 text = { Text("Pizza") },
                 modifier = Modifier
                     .size(200.dp, 50.dp)
@@ -291,7 +269,7 @@ fun OrderButton() {
                 },
             )
             ExtendedFloatingActionButton(
-                onClick = { },
+                onClick = { goToJuiceList() },
                 icon = {
                     Icon(
                         Icons.Filled.Favorite,
