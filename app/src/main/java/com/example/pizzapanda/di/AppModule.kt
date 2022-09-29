@@ -107,7 +107,8 @@ class AppModule {
             updateMenu = UpdateMenuUseCase(menuRepository = menuRepository),
             deleteMenu = DeleteMenuUseCase(menuRepository = menuRepository),
             getMenuList = GetMenuListUseCase(menuRepository = menuRepository),
-            getOrderList = GetOrderListUseCase(orderRepository = orderRepository)
+            getOrderList = GetOrderListUseCase(orderRepository = orderRepository),
+            getMenuListByCategory = GetMenuListByCategoryUseCase(menuRepository = menuRepository)
         )
     }
 }

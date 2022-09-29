@@ -21,8 +21,10 @@ import com.example.pizzapanda.data.example.ExampleRoomRepository
 import com.example.pizzapanda.domain.usecase.AddExampleUseCase
 import com.example.pizzapanda.domain.usecase.ExampleUseCases
 import com.example.pizzapanda.domain.usecase.GetExamplesUseCase
+import com.example.pizzapanda.presentation.admin.adminComponents.AdminScreen
 import com.example.pizzapanda.presentation.example.ExampleViewModel
 import com.example.pizzapanda.presentation.example.components.ExampleScreen
+import com.example.pizzapanda.presentation.main.mainComponents.MainScreen
 import com.example.pizzapanda.presentation.util.Screen
 import com.example.pizzapanda.ui.theme.PizzaPandaTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,6 +51,18 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = Screen.HomeScreen.route
                     ) {
+                        // MSYM Main Screen
+                        composable(route = Screen.MainScreen.route){
+                            MainScreen(viewModel = viewModel) {
+                                navController.navigate(Screen.AdminScreen.route)
+                            }
+                        }
+                        // MSYM Admin Screen
+                        composable(route = Screen.AdminScreen.route) {
+                            AdminScreen(viewModel = viewModel) {
+                                navController.navigate(Screen.MainScreen.route)
+                            }
+                        }
                         composable(route = Screen.HomeScreen.route) {
                             Greeting("Pizza Panda") {
                                 navController.navigate(Screen.ExampleScreen.route)
