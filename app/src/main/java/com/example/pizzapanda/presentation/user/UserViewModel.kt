@@ -5,6 +5,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pizzapanda.domain.model.Menu
+import com.example.pizzapanda.domain.model.Order
+import com.example.pizzapanda.domain.model.OrderDetails
 import com.example.pizzapanda.domain.usecase.front.FrontUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ class UserViewModel @Inject constructor(private var pizzaListUseCase: FrontUseCa
         }
     }
 
-     fun separateFunction(pizzaJuiceFlag: String) {
+    fun separateFunction(pizzaJuiceFlag: String) {
         flag.value = pizzaJuiceFlag
         viewModelScope.launch {
             getAllPizza()
@@ -35,12 +38,24 @@ class UserViewModel @Inject constructor(private var pizzaListUseCase: FrontUseCa
             _userState.value = userState.value.copy(
                 pizzaList = pizzaListUseCase.getPizzaList()
             )
-        }
-        else
-        {
+        } else {
             _userState.value = userState.value.copy(
                 pizzaList = pizzaListUseCase.getJuiceList()
             )
+        }
+    }
+
+    fun onEvent(event: UserEvent) {
+        viewModelScope.launch {
+            when (event) {
+                is UserEvent.createOrder -> {
+                    pizzaListUseCase.orderFood(Order(details = listOf()))
+                    val currentOrder =  pizzaListUseCase.getCurrentOrder()
+                    pizzaListUseCase.updateOrder(currentOrder,)
+                   // pizzaListUseCase.orderFood(Order(details = OrderDetails(menu= Menu(name = event.name, price = event.price, category = event.category, meat = event.meat, taste = event.taste), count = event.count)))
+                }
+
+            }
         }
     }
 }

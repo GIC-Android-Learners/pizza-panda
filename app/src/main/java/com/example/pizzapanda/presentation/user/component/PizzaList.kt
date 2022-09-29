@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pizzapanda.R
+import com.example.pizzapanda.domain.model.Menu
+import com.example.pizzapanda.domain.model.OrderDetails
 import com.example.pizzapanda.presentation.user.UserViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -32,9 +34,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun PizzaList(viewModel: UserViewModel = hiltViewModel(), pizzaJuiceFlag: String) {
     viewModel.separateFunction(pizzaJuiceFlag)
-    val _noteList = remember { MutableStateFlow(listOf<FoodOrder>()) }
+    val _noteList = remember { MutableStateFlow(listOf<OrderDetails>()) }
     val noteList by remember { _noteList }.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,6 +52,7 @@ fun PizzaList(viewModel: UserViewModel = hiltViewModel(), pizzaJuiceFlag: String
         ) {
             //pizza list
             items(viewModel.userState.value.pizzaList.size) { menu ->
+                var pizzaList = viewModel.userState.value.pizzaList[menu]
                 val qtyAssign = 1
                 val paddingModifier = Modifier.padding(10.dp)
                 Box(modifier = paddingModifier) {
@@ -59,6 +61,7 @@ fun PizzaList(viewModel: UserViewModel = hiltViewModel(), pizzaJuiceFlag: String
                     val addClick = remember {      //if card click state value
                         mutableStateOf(false)
                     }
+                    var flag = 1
                     Card(
                         elevation = 10.dp,
                         shape = RoundedCornerShape(18.dp), //Card CornerRound
@@ -67,13 +70,16 @@ fun PizzaList(viewModel: UserViewModel = hiltViewModel(), pizzaJuiceFlag: String
                             .clickable {
                                 addClick.value = true   //if card click state value change
                                 val newList = ArrayList(noteList)
+                                flag ++
                                 newList.add(
-                                    FoodOrder(
-                                        addClick.value,
-                                        viewModel.userState.value.pizzaList[menu].name,
-                                        viewModel.userState.value.pizzaList[menu].price,
-                                        qtyAssign
-                                    )
+//
+//                                    FoodOrder(
+//                                        addClick.value,
+//                                        viewModel.userState.value.pizzaList[menu].name,
+//                                        viewModel.userState.value.pizzaList[menu].price,
+//                                        qtyAssign
+//                                    )
+                                    OrderDetails(menu = Menu(name =pizzaList.name, price = pizzaList.price,meat = pizzaList.meat, taste = pizzaList.taste, category = pizzaList.category))
                                 )
                                 if (newList.size >= 1) {
                                     _noteList.value = newList
@@ -81,7 +87,7 @@ fun PizzaList(viewModel: UserViewModel = hiltViewModel(), pizzaJuiceFlag: String
                             },
                         backgroundColor = Color.DarkGray //Card Background
                     ) {
-                        var flag = 1
+
                         //pizza info
                         Column(
                             modifier = paddingModifier, //align for each card
@@ -99,12 +105,13 @@ fun PizzaList(viewModel: UserViewModel = hiltViewModel(), pizzaJuiceFlag: String
                         }
                         //for pizza oder
                         if (addClick.value) {
-                            FoodOrderModel(
-                                addClick.value,
-                                viewModel.userState.value.pizzaList[menu].name,
-                                viewModel.userState.value.pizzaList[menu].price.toString(),
-                                _noteList.value
-                            )   //if card click, order modal dialog show
+                              flag++
+//                            FoodOrderModel(
+//                                addClick.value,
+//                                viewModel.userState.value.pizzaList[menu].name,
+//                                viewModel.userState.value.pizzaList[menu].price.toString(),
+//                                _noteList.value
+//                            )   //if card click, order modal dialog show
                             if (FoodOrderModel(
                                     addClick.value,
                                     viewModel.userState.value.pizzaList[menu].name,
