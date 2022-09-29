@@ -3,7 +3,6 @@ package com.example.pizzapanda.presentation.main.mainComponents
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,9 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.example.pizzapanda.R
 import com.example.pizzapanda.presentation.user.component.UserPane
@@ -29,7 +26,7 @@ fun SurfaceControl(
         Surface(
             modifier = Modifier.size(400.dp, 750.dp),
         ) {
-            CoverImagePartition1() {
+            CoverImagePartition1 {
                 goToAdmin()
             }
         }
@@ -72,87 +69,8 @@ fun CoverImagePartition2() {
 }
 
 @Composable
-fun ItemCard() {
-    val addClick = remember {
-        mutableStateOf(false)
-    }
-    val deleteClick = remember {
-        mutableStateOf(false)
-    }
-
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                cutoutShape = MaterialTheme.shapes.small.copy(
-                    CornerSize(percent = 50)
-                ),
-                backgroundColor = Color.DarkGray,
-            ) {
-                ExtendedFloatingActionButton(
-                    onClick = { addClick.value = true },
-                    text = { },
-                    backgroundColor = Color.DarkGray,
-                    modifier = Modifier.size(55.dp),
-                    icon = {
-                        Icon(
-                            Icons.Filled.Edit,
-                            tint = Color.White,
-                            contentDescription = "Update",
-                        )
-                    },
-                )
-                ItemAddForm(addClick = addClick)
-
-
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        deleteClick.value = true
-                    },
-                    text = { },
-                    backgroundColor = Color.DarkGray,
-                    modifier = Modifier.size(55.dp),
-                    icon = {
-                        Icon(
-                            Icons.Filled.Delete,
-                            contentDescription = "Delete",
-                            tint = Color.White
-                        )
-                    },
-                )
-                DeleteItems(deleteClick = deleteClick)
-            }
-        },
-        modifier = Modifier
-            .size(200.dp, 200.dp)
-            .padding(0.dp, 20.dp, 20.dp, 0.dp)
-            .background(Color.Black)
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            Text(
-                text = "Veggie Pizza",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp,
-                color = Color("#004a4d".toColorInt())
-            )
-            Image(
-                painter = painterResource(R.drawable.cover_8),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(25.dp))
-                    .size(160.dp, 100.dp),
-                contentScale = ContentScale.FillBounds,
-            )
-        }
-    }
-}
-
-@Composable
 fun DeleteItems(deleteClick: MutableState<Boolean>) {
-    var name = remember { mutableStateOf("") }
-    val taste = remember { mutableStateOf("") }
-    val price = remember { mutableStateOf("") }
-    if (deleteClick.value === true) {
+    if (deleteClick.value) {
         AlertDialog(
             onDismissRequest = {
                 deleteClick.value = false
