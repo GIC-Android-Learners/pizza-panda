@@ -8,13 +8,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pizzapanda.R
+import com.example.pizzapanda.domain.helper.ImageHelper
 import com.example.pizzapanda.domain.model.Menu
+import com.example.pizzapanda.domain.storage.FileStorage
+import com.example.pizzapanda.domain.storage.util.Directory
 import com.example.pizzapanda.presentation.user.UserViewModel
+import com.example.pizzapanda.storage.LocalFileStorage
 
 @Composable
 fun MenuList(viewModel: UserViewModel = hiltViewModel(), onMenuClick: (Menu) -> Unit) {
@@ -69,7 +74,7 @@ fun MenuItem(menu: Menu, onClick: (Menu) -> Unit) {
 @Composable
 fun Pizza(menu: Menu) {
     Column {
-        MenuImage()
+        MenuImage(menu.photo)
         MenuName(name = menu.name)
         Description(text = menu.taste)
         Description(text = menu.meat)
@@ -80,14 +85,18 @@ fun Pizza(menu: Menu) {
 @Composable
 fun Juice(menu: Menu) {
     Column {
-        MenuImage()
+        MenuImage(menu.photo)
         MenuName(name = menu.name)
         Description(text = menu.price.toString())
     }
 }
 
 @Composable
-fun MenuImage() {
+fun MenuImage(photo: String) {
+    val fileStorage: FileStorage = LocalFileStorage(LocalContext.current)
+    val photoFile = fileStorage.getFile(Directory.Image.path, photo)
+    val bitMapImage = ImageHelper.toImageBitMap(photoFile)
+
     Box(
         modifier = Modifier
             .height(90.dp)
@@ -97,10 +106,17 @@ fun MenuImage() {
                 y = 24.dp
             )
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.italian_pizza_on_a_transparent_background__by_prussiaart_dc8zuux_fullview),
-            contentDescription = "Menu Image"
-        )
+        if (bitMapImage === null) {
+            Image(
+                painter = painterResource(id = R.drawable.italian_pizza_on_a_transparent_background__by_prussiaart_dc8zuux_fullview),
+                contentDescription = "Menu Image"
+            )
+        } else {
+            Image(
+                bitmap = bitMapImage,
+                contentDescription = "Menu Image"
+            )
+        }
     }
 }
 
