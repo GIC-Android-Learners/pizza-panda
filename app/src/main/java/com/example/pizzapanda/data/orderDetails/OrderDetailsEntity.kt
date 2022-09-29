@@ -19,5 +19,5 @@ class OrderDetailsEntity(
     val count: Int = 1,
 
     @ColumnInfo(name = "order_time", defaultValue = "CURRENT_TIMESTAMP")
-    val orderTime: String = ""
+    val orderTime: String? = ""
 )

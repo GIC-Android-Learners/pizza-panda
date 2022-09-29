@@ -16,8 +16,7 @@ fun AdminOverView(goToInsert: () -> Unit) {
         Surface(
             modifier = Modifier.size(400.dp, 750.dp),
         ) {
-            CoverImagePartitionFirst() {
-            }
+            CoverImagePartitionFirst()
         }
         Surface(
             modifier = Modifier

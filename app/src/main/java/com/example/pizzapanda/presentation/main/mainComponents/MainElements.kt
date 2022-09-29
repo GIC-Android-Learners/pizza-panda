@@ -1,16 +1,13 @@
 package com.example.pizzapanda.presentation.main.mainComponents
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -38,17 +35,15 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pizzapanda.R
-import com.example.pizzapanda.domain.model.Menu
 import com.example.pizzapanda.presentation.admin.AdminEvent
 import com.example.pizzapanda.presentation.admin.AdminViewModel
-import java.util.concurrent.ThreadLocalRandom.current
 
 var pizzaBtnClick = mutableStateOf(false)
 var juiceBtnClick = mutableStateOf(false)
 var allMenuBtnClick = mutableStateOf(true)
 
 @Composable
-fun CoverImagePartitionFirst(goToAdmin: () -> Unit) {
+fun CoverImagePartitionFirst() {
     Scaffold(
         floatingActionButton = {
             ItemScaffoldButton("Pizza List", "Juice List")
@@ -89,12 +84,10 @@ fun CoverImagePartitionSecond() {
                 if (allMenuBtnClick.value) {
                     MenuList()
                 }
-
             }
         }
     }
 }
-
 
 @Composable
 fun ItemScaffoldButton(btn1: String, btn2: String) {
@@ -120,7 +113,6 @@ fun ItemScaffoldButton(btn1: String, btn2: String) {
                     }
                 },
             )
-
         }
         Column {
             ExtendedFloatingActionButton(
@@ -136,10 +128,8 @@ fun ItemScaffoldButton(btn1: String, btn2: String) {
                 modifier = Modifier.size(185.dp, 50.dp)
             )
         }
-
     }
 }
-
 
 @Composable
 fun WelcomeText() {
@@ -203,7 +193,6 @@ fun AddButton() {
     ItemAddForm(addClick = addClick)
 }
 
-
 @Composable
 fun ItemCard(name: String) {
     val addClick = remember {
@@ -223,7 +212,7 @@ fun ItemCard(name: String) {
             ) {
                 ExtendedFloatingActionButton(
                     onClick = { addClick.value = true },
-                    text = { "" },
+                    text = { },
                     backgroundColor = Color.DarkGray,
                     modifier = Modifier.size(55.dp),
                     icon = {
@@ -232,14 +221,14 @@ fun ItemCard(name: String) {
                             tint = Color.White,
                             contentDescription = "Update",
                         )
-                    },
+                    }
                 )
                 ItemAddForm(addClick = addClick)
                 ExtendedFloatingActionButton(
                     onClick = {
                         deleteClick.value = true
                     },
-                    text = { "" },
+                    text = { },
                     backgroundColor = Color.DarkGray,
                     modifier = Modifier.size(55.dp),
                     icon = {
@@ -278,7 +267,6 @@ fun ItemCard(name: String) {
     }
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PizzaList(adminViewModel: AdminViewModel = hiltViewModel()) {
@@ -295,16 +283,12 @@ fun PizzaList(adminViewModel: AdminViewModel = hiltViewModel()) {
             contentPadding = PaddingValues(8.dp)
         ) {
 
-            items(data.size) { menulist ->
-                var list = data[menulist]
-
-                ItemCard(list.name)
-
+            items(data.size) { menuList ->
+                ItemCard(data[menuList].name)
             }
         }
     }
 }
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -321,14 +305,12 @@ fun JuiceList(adminViewModel: AdminViewModel = hiltViewModel()) {
             cells = GridCells.Fixed(4),
             contentPadding = PaddingValues(8.dp)
         ) {
-            items(data.size) { menulist ->
-                var list = data[menulist]
-                ItemCard(list.name)
+            items(data.size) { menuList ->
+                ItemCard(data[menuList].name)
             }
         }
     }
 }
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -347,14 +329,12 @@ fun MenuList(adminViewModel: AdminViewModel = hiltViewModel()) {
             cells = GridCells.Fixed(4),
             contentPadding = PaddingValues(8.dp)
         ) {
-            items(data.size) { menulist ->
-                var list = data[menulist]
-                ItemCard(list.name)
+            items(data.size) { menuList ->
+                ItemCard(data[menuList].name)
             }
         }
     }
 }
-
 
 @Composable
 fun PizzaListForm(
@@ -398,10 +378,7 @@ fun PizzaListForm(
             )
         )
     }
-
-
 }
-
 
 @Composable
 fun JuiceListForm(
@@ -435,29 +412,32 @@ fun JuiceListForm(
     }
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ItemAddForm(
     adminViewModel: AdminViewModel = hiltViewModel(),
     addClick: MutableState<Boolean>,
 ) {
-    var name = remember { mutableStateOf("") }
+    val name = remember { mutableStateOf("") }
     val taste = remember { mutableStateOf("") }
     val price = remember { mutableStateOf("") }
     val category = remember { mutableStateOf("") }
-    if (addClick.value === true) {
+
+    if (addClick.value) {
         AlertDialog(
             onDismissRequest = {
                 addClick.value = true
             },
-
             text = {
-                Column(verticalArrangement = Arrangement.SpaceEvenly) {
-                    Text(text = "Item Insert Form",
-                        fontFamily = FontFamily.Monospace)
+                Column(
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = "Item Insert Form",
+                        fontFamily = FontFamily.Monospace
+                    )
                     val radioOptions = listOf("Pizza", "Juice")
                     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+
                     Row {
                         radioOptions.forEach { text ->
                             Row(
@@ -496,9 +476,13 @@ fun ItemAddForm(
             confirmButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        adminViewModel.onEvent(AdminEvent.InsertPizza(name.value,
-                            price.value.toInt(), category.value,
-                            taste.value))
+                        adminViewModel.onEvent(
+                            AdminEvent.InsertPizza(
+                                name.value,
+                                price.value.toInt(), category.value,
+                                taste.value
+                            )
+                        )
                         addClick.value = false
                     },
                     text = { Text("Add") },

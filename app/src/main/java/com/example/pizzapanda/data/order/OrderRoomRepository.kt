@@ -32,11 +32,22 @@ class OrderRoomRepository(
     }
 
     override suspend fun createOrder(order: Order) {
-        orderDao.insert(
-            OrderEntity(
-                id = order.id
-            )
-        )
+        orderDao.insert(OrderEntity())
+        val currentOrder = orderDao.getCurrentOrder()
+        val currentOrderId = currentOrder.id
+        currentOrderId?.let {
+            order.details.forEach { orderDetail ->
+                orderDetail.menu.id?.let {
+                    orderDetailsDao.insert(
+                        OrderDetailsEntity(
+                            orderId = currentOrderId,
+                            itemId = orderDetail.menu.id,
+                            count = orderDetail.count
+                        )
+                    )
+                }
+            }
+        }
     }
 
     override suspend fun checkout(order: Order) {
@@ -63,7 +74,7 @@ class OrderRoomRepository(
             id = orderDetailsEntity.id,
             orderId = orderDetailsEntity.orderId,
             menu = toMenu(menuDao.getMenusById(orderDetailsEntity.itemId)),
-            orderTime = orderDetailsEntity.orderTime
+            orderTime = orderDetailsEntity.orderTime + ""
         )
 
     private fun toMenu(menuEntity: MenuEntity): Menu = Menu(
