@@ -5,5 +5,6 @@ class AdminUseCases(
     val updateMenu: UpdateMenuUseCase,
     val deleteMenu: DeleteMenuUseCase,
     val getMenuList: GetMenuListUseCase,
-    val getOrderList: GetOrderListUseCase
+    val getOrderList: GetOrderListUseCase,
+    val getMenuListByCategory: GetMenuListByCategoryUseCase
 )
