@@ -30,7 +30,8 @@ fun PhotoPicker(originalPhoto: File? = null, onChoose: (Uri) -> Unit) {
 
     if (imageUri.value === null) {
         originalPhoto?.let {
-            bitmap.value = ImageHelper.toImageBitMap(originalPhoto).asAndroidBitmap()
+            onChoose(Uri.fromFile(originalPhoto))
+            bitmap.value = ImageHelper.toImageBitMap(originalPhoto)?.asAndroidBitmap()
         }
     } else {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -44,9 +45,9 @@ fun PhotoPicker(originalPhoto: File? = null, onChoose: (Uri) -> Unit) {
         }
     }
 
-    bitmap.value?.let { bitmap ->
+    bitmap.value?.let {
         Image(
-            bitmap = bitmap.asImageBitmap(),
+            bitmap = it.asImageBitmap(),
             contentDescription = "",
             modifier = Modifier.width(150.dp)
         )

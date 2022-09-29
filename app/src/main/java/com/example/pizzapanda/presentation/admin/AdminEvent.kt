@@ -1,9 +1,10 @@
 package com.example.pizzapanda.presentation.admin
 
-sealed class AdminEvent {
-    data class InsertPizza(val name: String, val price: Int, val category: String, val taste: String): AdminEvent()
-    data class UpdatePizza(val name: String, val price: Int, val category: String, val taste: String): AdminEvent()
-    data class DeletePizza(val id: Int): AdminEvent()
-    data class GetMenuByCategory(val category: String): AdminEvent()
+import android.net.Uri
+import com.example.pizzapanda.domain.model.Menu
 
+sealed class AdminEvent {
+    data class InsertMenu(val menu: Menu, val photoUri: Uri? = null) : AdminEvent()
+    data class UpdateMenu(val menu: Menu, val photoUri: Uri? = null) : AdminEvent()
+    data class DeleteMenu(val menu: Menu) : AdminEvent()
 }

@@ -1,5 +1,6 @@
 package com.example.pizzapanda.presentation.main.mainComponents
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -35,8 +36,15 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pizzapanda.R
+import com.example.pizzapanda.domain.helper.ImageHelper
+import com.example.pizzapanda.domain.model.Menu
+import com.example.pizzapanda.domain.storage.FileStorage
+import com.example.pizzapanda.domain.storage.util.Directory
 import com.example.pizzapanda.presentation.admin.AdminEvent
 import com.example.pizzapanda.presentation.admin.AdminViewModel
+import com.example.pizzapanda.presentation.util.components.PhotoPicker
+import com.example.pizzapanda.storage.LocalFileStorage
+import java.io.File
 
 var pizzaBtnClick = mutableStateOf(false)
 var juiceBtnClick = mutableStateOf(false)
@@ -194,13 +202,15 @@ fun AddButton() {
 }
 
 @Composable
-fun ItemCard(name: String) {
+fun ItemCard(menu: Menu, onDelete: (Menu) -> Unit) {
     val addClick = remember {
         mutableStateOf(false)
     }
     val deleteClick = remember {
         mutableStateOf(false)
     }
+    val fileStorage: FileStorage = LocalFileStorage(LocalContext.current)
+    val photoFile = fileStorage.getFile(Directory.Image.path, menu.photo)
 
     Scaffold(
         bottomBar = {
@@ -223,7 +233,7 @@ fun ItemCard(name: String) {
                         )
                     }
                 )
-                ItemAddForm(addClick = addClick)
+                ItemAddForm(addClick = addClick, editingMenu = menu)
                 ExtendedFloatingActionButton(
                     onClick = {
                         deleteClick.value = true
@@ -239,7 +249,9 @@ fun ItemCard(name: String) {
                         )
                     },
                 )
-                DeleteItems(deleteClick = deleteClick)
+                DeleteItems(deleteClick = deleteClick) {
+                    onDelete(menu)
+                }
             }
         },
         modifier = Modifier
@@ -249,20 +261,33 @@ fun ItemCard(name: String) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = name,
+                text = menu.name,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp,
                 color = Color("#004a4d".toColorInt())
             )
-            Image(
-                painter = painterResource(R.drawable.cover_3),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(shape = RoundedCornerShape(25.dp))
-                    .size(160.dp, 100.dp),
-                contentScale = ContentScale.FillBounds,
-            )
+            val bitMapImage = ImageHelper.toImageBitMap(photoFile)
+            if (bitMapImage === null) {
+                Image(
+                    painter = painterResource(R.drawable.cover_3),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(shape = RoundedCornerShape(25.dp))
+                        .size(160.dp, 100.dp),
+                    contentScale = ContentScale.FillBounds,
+                )
+            } else {
+                Image(
+                    bitmap = bitMapImage,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(shape = RoundedCornerShape(25.dp))
+                        .size(160.dp, 100.dp),
+                    contentScale = ContentScale.FillBounds,
+                )
+            }
         }
     }
 }
@@ -284,7 +309,9 @@ fun PizzaList(adminViewModel: AdminViewModel = hiltViewModel()) {
         ) {
 
             items(data.size) { menuList ->
-                ItemCard(data[menuList].name)
+                ItemCard(data[menuList]) {
+                    adminViewModel.onEvent(AdminEvent.DeleteMenu(it))
+                }
             }
         }
     }
@@ -306,7 +333,9 @@ fun JuiceList(adminViewModel: AdminViewModel = hiltViewModel()) {
             contentPadding = PaddingValues(8.dp)
         ) {
             items(data.size) { menuList ->
-                ItemCard(data[menuList].name)
+                ItemCard(data[menuList]) {
+                    adminViewModel.onEvent(AdminEvent.DeleteMenu(it))
+                }
             }
         }
     }
@@ -330,7 +359,9 @@ fun MenuList(adminViewModel: AdminViewModel = hiltViewModel()) {
             contentPadding = PaddingValues(8.dp)
         ) {
             items(data.size) { menuList ->
-                ItemCard(data[menuList].name)
+                ItemCard(data[menuList]) {
+                    adminViewModel.onEvent(AdminEvent.DeleteMenu(it))
+                }
             }
         }
     }
@@ -342,6 +373,8 @@ fun PizzaListForm(
     price: MutableState<String>,
     taste: MutableState<String>,
     category: MutableState<String>,
+    photoUri: MutableState<Uri?>,
+    originalPhoto: File? = null
 ) {
     Column {
         OutlinedTextField(
@@ -377,6 +410,9 @@ fun PizzaListForm(
                 unfocusedLabelColor = Color.Gray
             )
         )
+        PhotoPicker(originalPhoto = originalPhoto, onChoose = {
+            photoUri.value = it
+        })
     }
 }
 
@@ -385,6 +421,8 @@ fun JuiceListForm(
     name: MutableState<String>,
     price: MutableState<String>,
     category: MutableState<String>,
+    photoUri: MutableState<Uri?>,
+    originalPhoto: File? = null
 ) {
     Column {
         OutlinedTextField(
@@ -409,6 +447,9 @@ fun JuiceListForm(
                 unfocusedLabelColor = Color.Gray
             )
         )
+        PhotoPicker(originalPhoto = originalPhoto, onChoose = {
+            photoUri.value = it
+        })
     }
 }
 
@@ -416,11 +457,26 @@ fun JuiceListForm(
 fun ItemAddForm(
     adminViewModel: AdminViewModel = hiltViewModel(),
     addClick: MutableState<Boolean>,
+    editingMenu: Menu? = null
 ) {
+    var isEditing = false
     val name = remember { mutableStateOf("") }
     val taste = remember { mutableStateOf("") }
     val price = remember { mutableStateOf("") }
     val category = remember { mutableStateOf("") }
+    val photoUri = remember {
+        mutableStateOf<Uri?>(null)
+    }
+    var originalPhoto: File? = null
+    editingMenu?.let {
+        name.value = editingMenu.name
+        taste.value = editingMenu.taste
+        price.value = editingMenu.price.toString()
+        category.value = editingMenu.category
+        val fileStorage: FileStorage = LocalFileStorage(LocalContext.current)
+        originalPhoto = fileStorage.getFile(Directory.Image.path, editingMenu.photo)
+        isEditing = true
+    }
 
     if (addClick.value) {
         AlertDialog(
@@ -432,10 +488,14 @@ fun ItemAddForm(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
-                        text = "Item Insert Form",
+                        text = if (isEditing) {
+                            "Item Edit Form"
+                        } else {
+                            "Item Insert Form"
+                        },
                         fontFamily = FontFamily.Monospace
                     )
-                    val radioOptions = listOf("Pizza", "Juice")
+                    val radioOptions = listOf("pizza", "juice")
                     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
 
                     Row {
@@ -464,28 +524,60 @@ fun ItemAddForm(
                             }
                         }
                     }
-                    if (selectedOption == "Pizza") {
+                    if (selectedOption == "pizza") {
                         category.value = selectedOption
-                        PizzaListForm(name, price, taste, category)
+                        PizzaListForm(name, price, taste, category, photoUri, originalPhoto)
                     } else {
                         category.value = selectedOption
-                        JuiceListForm(name, price, category)
+                        JuiceListForm(name, price, category, photoUri, originalPhoto)
                     }
                 }
             },
             confirmButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        adminViewModel.onEvent(
-                            AdminEvent.InsertPizza(
-                                name.value,
-                                price.value.toInt(), category.value,
-                                taste.value
+                        if (editingMenu != null) {
+                            adminViewModel.onEvent(
+                                AdminEvent.UpdateMenu(
+                                    menu = Menu(
+                                        id = editingMenu.id,
+                                        name = name.value,
+                                        price = price.value.toInt(),
+                                        category = category.value,
+                                        taste = taste.value
+                                    ),
+                                    photoUri = photoUri.value
+                                )
                             )
-                        )
+                        } else {
+                            adminViewModel.onEvent(
+                                AdminEvent.InsertMenu(
+                                    menu = Menu(
+                                        name = name.value,
+                                        price = price.value.toInt(),
+                                        category = category.value,
+                                        taste = taste.value
+                                    ),
+                                    photoUri = photoUri.value
+                                )
+                            )
+                        }
+                        name.value = ""
+                        price.value = ""
+                        category.value = ""
+                        taste.value = ""
+                        photoUri.value = null
                         addClick.value = false
                     },
-                    text = { Text("Add") },
+                    text = {
+                        Text(
+                            if (isEditing) {
+                                "Edit"
+                            } else {
+                                "Add"
+                            }
+                        )
+                    },
                     modifier = Modifier
                         .size(150.dp, 50.dp)
                         .padding(0.dp, 0.dp, 20.dp, 10.dp),
