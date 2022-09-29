@@ -48,17 +48,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         // MSYM Main Screen
                         composable(route = Screen.MainScreen.route) {
-
-                            MainScreen(viewModel = viewModel, goToAdmin = {
+                            MainScreen(goToAdmin = {
                                 navController.navigate(Screen.AdminScreen.route)
-                            }, goToPizzaList = {
-                                navController.navigate(Screen.PizzaUserScreen.route)
-                            }, goToJuiceList = {
-                                navController.navigate(Screen.JuiceUserScreen.route)
-                            }, pizzaJuiceFlag.value
-                            )
-
-
+                            })
                         }
                         // MSYM Admin Screen
                         composable(route = Screen.AdminScreen.route) {
@@ -76,20 +68,14 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(Screen.HomeScreen.route)
                             }
                         }
-
                         composable(route = Screen.PizzaUserScreen.route) {
                             pizzaJuiceFlag.value = "pizza"
                             Column() {
                                 Row() {
                                     Column() {
-                                        MainScreen(viewModel = viewModel, goToAdmin = {
+                                        MainScreen(goToAdmin = {
                                             navController.navigate(Screen.AdminScreen.route)
-                                        }, goToPizzaList = {
-                                            navController.navigate(Screen.PizzaUserScreen.route)
-                                        }, goToJuiceList = {
-                                            navController.navigate(Screen.JuiceUserScreen.route)
-                                        }, pizzaJuiceFlag.value
-                                        )
+                                        })
                                     }
                                 }
                             }
@@ -99,29 +85,18 @@ class MainActivity : ComponentActivity() {
                             Column() {
                                 Row() {
                                     Column() {
-                                        MainScreen(viewModel = viewModel, goToAdmin = {
+                                        MainScreen(goToAdmin = {
                                             navController.navigate(Screen.AdminScreen.route)
-                                        }, goToPizzaList = {
-                                            navController.navigate(Screen.PizzaUserScreen.route)
-                                        }, goToJuiceList = {
-                                            navController.navigate(Screen.JuiceUserScreen.route)
-                                        }, pizzaJuiceFlag.value
-                                        )
+                                        })
                                     }
-
                                 }
-
                             }
-
                         }
-
                     }
                 }
             }
         }
     }
-
-
 }
 
 @Composable

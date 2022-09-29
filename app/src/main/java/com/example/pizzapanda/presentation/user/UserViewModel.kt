@@ -14,48 +14,131 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(private var pizzaListUseCase: FrontUseCases) :
+class UserViewModel @Inject constructor(private var frontUseCases: FrontUseCases) :
     ViewModel() {
-    private val _userState: MutableState<UserState> = mutableStateOf(UserState(listOf()))
+    private val _userState: MutableState<UserState> = mutableStateOf(UserState(listOf(), listOf()))
     val userState: State<UserState> = _userState
-    private val flag = mutableStateOf("pizza")
 
     init {
         viewModelScope.launch {
-            getAllPizza()
+            setMenu()
         }
     }
 
-    fun separateFunction(pizzaJuiceFlag: String) {
-        flag.value = pizzaJuiceFlag
-        viewModelScope.launch {
-            getAllPizza()
-        }
-    }
-
-    private suspend fun getAllPizza() {
-        if (flag.value === "pizza") {
-            _userState.value = userState.value.copy(
-                pizzaList = pizzaListUseCase.getPizzaList()
-            )
-        } else {
-            _userState.value = userState.value.copy(
-                pizzaList = pizzaListUseCase.getJuiceList()
-            )
-        }
+    private suspend fun setMenu() {
+        _userState.value = userState.value.copy(
+            pizzaList = frontUseCases.getPizzaList(),
+            juiceList = frontUseCases.getJuiceList()
+        )
     }
 
     fun onEvent(event: UserEvent) {
         viewModelScope.launch {
             when (event) {
-                is UserEvent.createOrder -> {
-                    pizzaListUseCase.orderFood(Order(details = listOf()))
-                    val currentOrder =  pizzaListUseCase.getCurrentOrder()
-                    pizzaListUseCase.updateOrder(currentOrder,)
-                   // pizzaListUseCase.orderFood(Order(details = OrderDetails(menu= Menu(name = event.name, price = event.price, category = event.category, meat = event.meat, taste = event.taste), count = event.count)))
+                is UserEvent.CreateOrder -> {
+                    createOrder()
                 }
-
+                is UserEvent.FlipMenu -> {
+                    _userState.value = userState.value.copy(
+                        selectedCategory = event.category
+                    )
+                }
+                is UserEvent.AddItem -> {
+                    addOrderItem(event.menu)
+                }
+                is UserEvent.ChangeAmount -> {
+                    changeAmount(event.menu, event.amount)
+                }
+                is UserEvent.ToggleOrderModal -> {
+                    _userState.value = userState.value.copy(
+                        isShowOrder = event.isShown
+                    )
+                }
+                is UserEvent.Checkout -> {
+                    checkout()
+                }
             }
         }
+    }
+
+    private suspend fun createOrder() {
+        if (userState.value.currentOrder.id == null) {
+            frontUseCases.orderFood(userState.value.currentOrder)
+
+        } else {
+            frontUseCases.updateOrder(userState.value.currentOrder)
+        }
+        val currentOrderId = frontUseCases.getOrderList().id
+        val orderDetails = userState.value.currentOrder.details
+        _userState.value = userState.value.copy(
+            currentOrder = Order(
+                id = currentOrderId,
+                details = orderDetails
+            )
+        )
+    }
+
+    private fun addOrderItem(menu: Menu) {
+        val currentOrder = userState.value.currentOrder
+        val orderedItem = currentOrder.details.firstOrNull {
+            it.menu.id === menu.id
+        }
+        orderedItem?.let {
+            changeAmount(menu, 1)
+        }
+
+        if (orderedItem == null) {
+            addItem(menu)
+        }
+    }
+
+    private fun changeAmount(menu: Menu, amount: Int) {
+        val currentOrder = userState.value.currentOrder
+        val orderDetails = currentOrder.details.map {
+            if (it.menu.id == menu.id) {
+                OrderDetails(
+                    id = it.id,
+                    orderId = it.orderId,
+                    menu = it.menu,
+                    count = it.count + amount,
+                    orderTime = it.orderTime
+                )
+            } else {
+                it
+            }
+        }
+
+        _userState.value = userState.value.copy(
+            currentOrder = Order(
+                id = currentOrder.id,
+                details = orderDetails.filter {
+                    it.count >= 1
+                }
+            )
+        )
+    }
+
+    private fun addItem(menu: Menu) {
+        val currentOrder = userState.value.currentOrder
+        val orderDetails: MutableList<OrderDetails> = currentOrder.details.toMutableList()
+        orderDetails.add(
+            OrderDetails(
+                menu = menu
+            )
+        )
+        _userState.value = userState.value.copy(
+            currentOrder = Order(
+                id = currentOrder.id,
+                details = orderDetails
+            )
+        )
+    }
+
+    private suspend fun checkout() {
+        frontUseCases.checkout(userState.value.currentOrder)
+        _userState.value = userState.value.copy(
+            currentOrder = Order(details = listOf()),
+            selectedCategory = "pizza"
+        )
     }
 }

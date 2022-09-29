@@ -6,14 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -28,18 +25,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.example.pizzapanda.R
-
-@Composable
-fun MainElements() {
-
-}
 
 @Composable
 fun CoverImagePartitionFirst(goToAdmin: () -> Unit) {
@@ -144,36 +134,6 @@ fun PizzaList() {
 }
 
 @Composable
-fun PizzaName(name: String) {
-    Text(
-        name,
-        textAlign = TextAlign.Justify,
-        modifier = Modifier.padding(0.dp, 30.dp, 0.dp, 0.dp),
-        color = Color.Black
-    )
-}
-
-@Composable
-fun Taste(name: String) {
-    Text(
-        name,
-        textAlign = TextAlign.Justify,
-        modifier = Modifier.padding(10.dp, 5.dp, 0.dp, 0.dp),
-        color = Color.Black
-    )
-}
-
-@Composable
-fun Price(name: String) {
-    Text(
-        name,
-        textAlign = TextAlign.Justify,
-        modifier = Modifier.padding(10.dp, 5.dp, 0.dp, 0.dp),
-        color = Color.Black
-    )
-}
-
-@Composable
 fun ItemAddForm(addClick: MutableState<Boolean>) {
     var name = remember { mutableStateOf("") }
     val taste = remember { mutableStateOf("") }
@@ -255,7 +215,7 @@ fun ItemAddForm(addClick: MutableState<Boolean>) {
                     },
                 )
             },
-            modifier = Modifier.size(400.dp,300.dp)
+            modifier = Modifier.size(400.dp, 300.dp)
         )
     }
 }
