@@ -69,7 +69,7 @@ fun CoverImagePartition2() {
 }
 
 @Composable
-fun DeleteItems(deleteClick: MutableState<Boolean>) {
+fun DeleteItems(deleteClick: MutableState<Boolean>, onDelete: () -> Unit) {
     if (deleteClick.value) {
         AlertDialog(
             onDismissRequest = {
@@ -81,6 +81,7 @@ fun DeleteItems(deleteClick: MutableState<Boolean>) {
                 ExtendedFloatingActionButton(
                     onClick = {
                         //todoViewModel.add(title.value, detail.value)
+                        onDelete()
                         deleteClick.value = false
                     },
                     text = { Text("Delete") },
@@ -115,7 +116,6 @@ fun DeleteItems(deleteClick: MutableState<Boolean>) {
             modifier = Modifier.size(400.dp, 100.dp)
         )
     }
-
 }
 
 @Composable

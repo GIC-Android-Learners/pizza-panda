@@ -11,16 +11,18 @@ import androidx.compose.ui.graphics.asImageBitmap
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-class ImageHelper() {
+class ImageHelper {
     companion object {
         fun toByteArray(context: Context, uri: Uri): ByteArray? =
             toBitMap(context, uri)?.let {
                 toByteArray(it)
             }
 
-        fun toImageBitMap(file: File): ImageBitmap {
+        fun toImageBitMap(file: File): ImageBitmap? {
             val bitmap = BitmapFactory.decodeFile(file.path)
-            return bitmap.asImageBitmap()
+            return bitmap?.asImageBitmap() ?: run {
+                return null
+            }
         }
 
         private fun toBitMap(context: Context, uri: Uri): Bitmap? {

@@ -1,6 +1,5 @@
 package com.example.pizzapanda.presentation.admin
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -13,24 +12,25 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminViewModel @Inject constructor(private val getMenuUseCases: AdminUseCases): ViewModel(){
-    private val _adminState: MutableState<AdminState> = mutableStateOf(AdminState(listOf(), listOf(),listOf(), Menu()))
+class AdminViewModel @Inject constructor(private val adminUseCases: AdminUseCases) : ViewModel() {
+    private val _adminState: MutableState<AdminState> =
+        mutableStateOf(AdminState(listOf(), listOf(), listOf(), Menu()))
     val adminState: State<AdminState> = _adminState
 
     init {
         getAllPizza()
     }
 
-    private  fun getAllPizza(){
+    private fun getAllPizza() {
         viewModelScope.launch {
             _adminState.value = adminState.value.copy(
-                itemList =  getMenuUseCases.getMenuList()
+                itemList = adminUseCases.getMenuList()
             )
             _adminState.value = adminState.value.copy(
-                pizzaListByCategory =  getMenuUseCases.getMenuListByCategory("Pizza")
+                pizzaListByCategory = adminUseCases.getMenuListByCategory("Pizza")
             )
             _adminState.value = adminState.value.copy(
-                juiceListByCategory =  getMenuUseCases.getMenuListByCategory("Juice")
+                juiceListByCategory = adminUseCases.getMenuListByCategory("Juice")
             )
         }
     }
@@ -38,12 +38,19 @@ class AdminViewModel @Inject constructor(private val getMenuUseCases: AdminUseCa
 
     fun onEvent(event: AdminEvent) {
         viewModelScope.launch {
-            when(event) {
-                is AdminEvent.InsertPizza -> {
-                    getMenuUseCases.insertMenu(Menu(null,event.name,event.price,event.category,event.taste))
+            when (event) {
+                is AdminEvent.InsertMenu -> {
+                    adminUseCases.insertMenu(event.menu, event.photoUri)
                     getAllPizza()
                 }
-
+                is AdminEvent.DeleteMenu -> {
+                    adminUseCases.deleteMenu(event.menu)
+                    getAllPizza()
+                }
+                is AdminEvent.UpdateMenu -> {
+                    adminUseCases.updateMenu(event.menu, event.photoUri)
+                    getAllPizza()
+                }
             }
         }
     }
