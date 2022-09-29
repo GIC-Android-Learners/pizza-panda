@@ -16,6 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.example.pizzapanda.data.PizzaDatabase
+import com.example.pizzapanda.data.example.ExampleRoomRepository
+import com.example.pizzapanda.domain.usecase.AddExampleUseCase
+import com.example.pizzapanda.domain.usecase.ExampleUseCases
+import com.example.pizzapanda.domain.usecase.GetExamplesUseCase
 import com.example.pizzapanda.presentation.admin.adminComponents.AdminScreen
 import com.example.pizzapanda.presentation.example.ExampleViewModel
 import com.example.pizzapanda.presentation.example.components.ExampleScreen
@@ -47,17 +53,11 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.MainScreen.route
                     ) {
                         // MSYM Main Screen
-                        composable(route = Screen.MainScreen.route) {
 
-                            MainScreen(viewModel = viewModel, goToAdmin = {
+                        composable(route = Screen.MainScreen.route){
+                            MainScreen(viewModel = viewModel) {
                                 navController.navigate(Screen.AdminScreen.route)
-                            }, goToPizzaList = {
-                                navController.navigate(Screen.PizzaUserScreen.route)
-                            }, goToJuiceList = {
-                                navController.navigate(Screen.JuiceUserScreen.route)
-                            }, pizzaJuiceFlag.value
-                            )
-
+                            }
 
                         }
                         // MSYM Admin Screen

@@ -122,7 +122,8 @@ class AppModule {
                 fileStorage = fileStorage
             ),
             getMenuList = GetMenuListUseCase(menuRepository = menuRepository),
-            getOrderList = GetOrderListUseCase(orderRepository = orderRepository)
+            getOrderList = GetOrderListUseCase(orderRepository = orderRepository),
+            getMenuListByCategory = GetMenuListByCategoryUseCase(menuRepository = menuRepository)
         )
     }
 
