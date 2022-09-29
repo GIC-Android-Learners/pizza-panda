@@ -11,6 +11,8 @@ import com.example.pizzapanda.domain.repository.ExampleRepository
 import com.example.pizzapanda.domain.repository.MenuRepository
 import com.example.pizzapanda.domain.repository.OrderDetailsRepository
 import com.example.pizzapanda.domain.repository.OrderRepository
+import com.example.pizzapanda.domain.storage.FileStorage
+import com.example.pizzapanda.storage.LocalFileStorage
 import com.example.pizzapanda.domain.usecase.AddExampleUseCase
 import com.example.pizzapanda.domain.usecase.ExampleUseCases
 import com.example.pizzapanda.domain.usecase.GetExamplesUseCase
@@ -100,14 +102,35 @@ class AppModule {
     @Singleton
     fun provideAdminUseCases(
         menuRepository: MenuRepository,
-        orderRepository: OrderRepository
+        orderRepository: OrderRepository,
+        fileStorage: FileStorage,
+        application: Application
     ): AdminUseCases {
         return AdminUseCases(
-            insertMenu = InsertMenuUseCase(menuRepository = menuRepository),
-            updateMenu = UpdateMenuUseCase(menuRepository = menuRepository),
-            deleteMenu = DeleteMenuUseCase(menuRepository = menuRepository),
+            insertMenu = InsertMenuUseCase(
+                menuRepository = menuRepository,
+                fileStorage = fileStorage,
+                application = application
+            ),
+            updateMenu = UpdateMenuUseCase(
+                menuRepository = menuRepository,
+                fileStorage = fileStorage,
+                application = application
+            ),
+            deleteMenu = DeleteMenuUseCase(
+                menuRepository = menuRepository,
+                fileStorage = fileStorage
+            ),
             getMenuList = GetMenuListUseCase(menuRepository = menuRepository),
             getOrderList = GetOrderListUseCase(orderRepository = orderRepository)
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileStorage(
+        application: Application
+    ): FileStorage {
+        return LocalFileStorage(application)
     }
 }
