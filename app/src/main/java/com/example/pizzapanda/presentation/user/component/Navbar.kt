@@ -8,16 +8,18 @@ import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.pizzapanda.R
 import com.example.pizzapanda.presentation.user.UserEvent
 import com.example.pizzapanda.presentation.user.UserViewModel
 
@@ -42,8 +44,9 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                     .padding(0.dp, 10.dp, 20.dp, 0.dp),
                 icon = {
                     Icon(
-                        Icons.Filled.Favorite,
-                        contentDescription = "Favorite"
+                        painter = painterResource(id = R.drawable.pizza_png_6),
+                        contentDescription = "Favorite",
+                        modifier = Modifier.size(30.dp,30.dp)
                     )
                 },
             )
@@ -53,7 +56,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                 },
                 icon = {
                     Icon(
-                        Icons.Filled.Favorite,
+                        painter = painterResource(id = R.drawable.juice),
                         contentDescription = "Favorite"
                     )
                 },
@@ -68,11 +71,11 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                 },
                 icon = {
                     Icon(
-                        Icons.Filled.Favorite,
-                        contentDescription = "Favorite"
+                        Icons.Filled.ShoppingCart,
+                        contentDescription = "ShoppingCart"
                     )
                 },
-                text = { Text("Change Order") },
+                text = { Text("Order") },
                 modifier = Modifier
                     .size(200.dp, 50.dp)
                     .padding(0.dp, 10.dp, 20.dp, 0.dp)
@@ -81,13 +84,13 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                 onClick = {
                     viewModel.onEvent(UserEvent.Checkout)
                 },
+                text = { Text("CheckOut") },
                 icon = {
                     Icon(
-                        Icons.Filled.Favorite,
-                        contentDescription = "Favorite"
+                        Icons.Default.ArrowForward,
+                        contentDescription = "ArrowForward"
                     )
                 },
-                text = { Text("CheckOut") },
                 modifier = Modifier
                     .size(200.dp, 50.dp)
                     .padding(0.dp, 10.dp, 20.dp, 0.dp)

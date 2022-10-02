@@ -21,10 +21,15 @@ import com.example.pizzapanda.domain.model.OrderDetails
 import com.example.pizzapanda.presentation.user.UserEvent
 import com.example.pizzapanda.presentation.user.UserViewModel
 
+var price = mutableListOf<Int>()
+var qty = mutableListOf<Int>()
+var total = 0
+
 @Composable
 fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
     val currentOrder = userViewModel.userState.value.currentOrder
     val openDialog = userViewModel.userState.value.isShowOrder
+
     if (openDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -38,12 +43,29 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                     if (currentOrder.details.isEmpty()) {
                         Text(text = "There is no item.")
                     }
+
+                    price = mutableListOf<Int>()
+                    qty = mutableListOf<Int>()
+
                     for (orderDetails in currentOrder.details) {
                         OrderDetails(orderDetails) { amount ->
                             userViewModel.onEvent(UserEvent.ChangeAmount(orderDetails.menu, amount))
                         }
+
                     }
-                    Divider(color = Color.Blue, thickness = 1.dp)
+                    if (currentOrder.details.isNotEmpty()) {
+                        Divider(color = Color.Black, thickness = 2.dp)
+                        Row() {
+                            Column(modifier = Modifier.width(Dp(360f))) {
+                                Text(text = "Total")
+                            }
+                            Column() {
+                                Text((total).toString(), fontSize = 15.sp)
+                            }
+
+                        }
+                    }
+
                 }
             },
             confirmButton = {
@@ -75,6 +97,7 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
     }
 }
 
+
 @Composable
 fun OrderDetails(
     orderDetails: OrderDetails,
@@ -82,6 +105,9 @@ fun OrderDetails(
 ) {
     val menu = orderDetails.menu
     val count = orderDetails.count
+
+    price.add(orderDetails.menu.price)
+    qty.add(orderDetails.count)
 
     Row {
         Column(modifier = Modifier.width(Dp(230f))) {
@@ -112,7 +138,10 @@ fun OrderDetails(
                         fontSize = 20.sp
                     )
                 }
-                Column(modifier = Modifier.width(Dp(40f))) {
+                Column(
+                    modifier = Modifier
+                        .width(Dp(40f))
+                ) {
                     Text(
                         text = "+",
                         fontSize = 30.sp,
@@ -121,7 +150,23 @@ fun OrderDetails(
                         }
                     )
                 }
+
             }
         }
+        Column(
+            modifier = Modifier
+                .width(Dp(800f)),
+
+            ) {
+            Text((menu.price * count).toString(), fontSize = 15.sp)
+        }
+        priceCalculate(price, qty)
+    }
+}
+
+fun priceCalculate(price: List<Int>, qty: List<Int>) {
+    total = 0
+    for ((index, cost) in price.withIndex()) {
+        total += cost * qty[index]
     }
 }
