@@ -6,5 +6,5 @@ data class AdminState(
     val itemList: List<Menu>,
     val pizzaListByCategory: List<Menu>,
     val juiceListByCategory: List<Menu>,
-    val item: Menu)
-{ }
+    val item: Menu
+) {}

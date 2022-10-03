@@ -1,4 +1,4 @@
-package com.example.pizzapanda.presentation.main.mainComponents
+package com.example.pizzapanda.presentation.main.components
 
 import android.net.Uri
 import android.widget.Toast

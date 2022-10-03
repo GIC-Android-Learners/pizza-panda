@@ -13,7 +13,6 @@ class InsertMenuUseCase(
     private val fileStorage: FileStorage,
     private val application: Application,
 ) {
-
     suspend operator fun invoke(menu: Menu, imageUri: Uri?) {
         imageUri?.let {
             val imageContent = ImageHelper.toByteArray(application, uri = imageUri)
@@ -32,6 +31,7 @@ class InsertMenuUseCase(
                     photo = fileName
                 )
             )
+
             return
         }
         menuRepository.insertMenu(menu)

@@ -3,23 +3,17 @@ package com.example.pizzapanda.di
 import android.app.Application
 import androidx.room.Room
 import com.example.pizzapanda.data.PizzaDatabase
-import com.example.pizzapanda.data.example.ExampleRoomRepository
 import com.example.pizzapanda.data.menu.MenuRoomRepository
 import com.example.pizzapanda.data.order.OrderRoomRepository
 import com.example.pizzapanda.data.orderDetails.OrderDetailsRoomRepository
-import com.example.pizzapanda.domain.repository.ExampleRepository
 import com.example.pizzapanda.domain.repository.MenuRepository
 import com.example.pizzapanda.domain.repository.OrderDetailsRepository
 import com.example.pizzapanda.domain.repository.OrderRepository
 import com.example.pizzapanda.domain.storage.FileStorage
 import com.example.pizzapanda.storage.LocalFileStorage
-import com.example.pizzapanda.domain.usecase.AddExampleUseCase
-import com.example.pizzapanda.domain.usecase.ExampleUseCases
-import com.example.pizzapanda.domain.usecase.GetExamplesUseCase
 import com.example.pizzapanda.domain.usecase.admin.*
 import com.example.pizzapanda.domain.usecase.front.*
 import com.example.pizzapanda.domain.usecase.front.GetCurrentOrderUseCase
-import com.example.pizzapanda.presentation.example.ExampleViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,12 +30,6 @@ class AppModule {
             application,
             PizzaDatabase::class.java, PizzaDatabase.DB_NAME
         ).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideExampleRepository(database: PizzaDatabase): ExampleRepository {
-        return ExampleRoomRepository(database.exampleDao())
     }
 
     @Provides
@@ -64,21 +52,6 @@ class AppModule {
     @Singleton
     fun provideOrderDetailsRepository(database: PizzaDatabase): OrderDetailsRepository {
         return OrderDetailsRoomRepository(database.orderDetailsDao())
-    }
-
-    @Provides
-    @Singleton
-    fun provideExampleViewModel(exampleUseCases: ExampleUseCases): ExampleViewModel {
-        return ExampleViewModel(exampleUseCases)
-    }
-
-    @Provides
-    @Singleton
-    fun provideExampleUseCases(repository: ExampleRepository): ExampleUseCases {
-        return ExampleUseCases(
-            getExamples = GetExamplesUseCase(repository),
-            addExample = AddExampleUseCase(repository)
-        )
     }
 
     @Provides
@@ -129,9 +102,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideFileStorage(
-        application: Application
-    ): FileStorage {
+    fun provideFileStorage(application: Application): FileStorage {
         return LocalFileStorage(application)
     }
 }

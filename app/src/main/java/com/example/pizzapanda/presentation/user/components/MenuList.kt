@@ -1,4 +1,4 @@
-package com.example.pizzapanda.presentation.user.component
+package com.example.pizzapanda.presentation.user.components
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

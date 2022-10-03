@@ -1,4 +1,4 @@
-package com.example.pizzapanda.presentation.main.mainComponents
+package com.example.pizzapanda.presentation.main.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import com.example.pizzapanda.R
-import com.example.pizzapanda.presentation.user.component.UserPane
+import com.example.pizzapanda.presentation.user.components.UserPane
 
 @Composable
 fun SurfaceControl(

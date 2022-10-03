@@ -1,4 +1,4 @@
-package com.example.pizzapanda.presentation.admin.adminComponents
+package com.example.pizzapanda.presentation.admin.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.pizzapanda.presentation.main.mainComponents.*
+import com.example.pizzapanda.presentation.main.components.*
 
 @Composable
 fun AdminOverView(goToMain: () -> Unit) {

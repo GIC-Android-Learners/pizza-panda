@@ -1,4 +1,4 @@
-package com.example.pizzapanda.presentation.user.component
+package com.example.pizzapanda.presentation.user.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -46,8 +46,8 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                         Text(text = stringResource(id = R.string.there_is_no_item))
                     }
 
-                    price = mutableListOf<Int>()
-                    qty = mutableListOf<Int>()
+                    price = mutableListOf()
+                    qty = mutableListOf()
 
                     for (orderDetails in currentOrder.details) {
                         OrderDetails(orderDetails) { amount ->
@@ -56,11 +56,11 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                     }
                     if (currentOrder.details.isNotEmpty()) {
                         Divider(color = Color.Black, thickness = 2.dp)
-                        Row() {
+                        Row {
                             Column(modifier = Modifier.width(Dp(360f))) {
                                 Text(text = stringResource(id = R.string.total))
                             }
-                            Column() {
+                            Column {
                                 Text((total).toString(), fontSize = 15.sp)
                             }
                         }

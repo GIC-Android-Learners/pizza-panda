@@ -1,7 +1,7 @@
-package com.example.pizzapanda.presentation.main.mainComponents
+package com.example.pizzapanda.presentation.admin.components
 
 import androidx.compose.runtime.Composable
-import com.example.pizzapanda.presentation.example.ExampleViewModel
+import com.example.pizzapanda.presentation.main.components.SurfaceControl
 
 @Composable
 fun MainScreen(goToAdmin: () -> Unit) {

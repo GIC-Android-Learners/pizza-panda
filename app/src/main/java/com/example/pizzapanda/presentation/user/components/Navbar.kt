@@ -1,4 +1,4 @@
-package com.example.pizzapanda.presentation.user.component
+package com.example.pizzapanda.presentation.user.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +24,6 @@ import com.example.pizzapanda.R
 import com.example.pizzapanda.presentation.user.UserEvent
 import com.example.pizzapanda.presentation.user.UserViewModel
 
-val alertDialog = mutableStateOf(false)
 val openDialog = mutableStateOf(false)
 val successfulDialog = mutableStateOf(false)
 
