@@ -11,12 +11,12 @@ import androidx.compose.ui.unit.dp
 import com.example.pizzapanda.presentation.main.mainComponents.*
 
 @Composable
-fun AdminOverView(goToInsert: () -> Unit) {
+fun AdminOverView(goToMain: () -> Unit) {
     Row(modifier = Modifier.clip(shape = RoundedCornerShape(25.dp))) {
         Surface(
             modifier = Modifier.size(400.dp, 750.dp),
         ) {
-            CoverImagePartitionFirst()
+            CoverImagePartitionFirst(goToMain)
         }
         Surface(
             modifier = Modifier

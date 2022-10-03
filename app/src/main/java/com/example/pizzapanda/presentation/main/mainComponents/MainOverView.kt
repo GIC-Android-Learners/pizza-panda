@@ -42,13 +42,13 @@ fun SurfaceControl(
 fun CoverImagePartition1(goToAdmin: () -> Unit) {
     Scaffold(
         floatingActionButton = {
-            ScaffoldButtons(goToAdmin, "Admin", "Order")
+            ScaffoldButtons(goToAdmin, "Admin")
         }
     ) {
         Surface(modifier = Modifier.background(Color("#ffead1".toColorInt()))) {
             Card(elevation = 20.dp, backgroundColor = Color("#ffead1".toColorInt())) {
                 Image(
-                    painter = painterResource(R.drawable.cover_8),
+                    painter = painterResource(R.drawable.cover_3),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -126,6 +126,10 @@ fun ScaffoldButtons(goToAdmin: () -> Unit, btn1: String, btn2: String) {
             onClick = {
                 goToAdmin()
             },
+            icon = { Icon(
+                Icons.Filled.Person,
+                contentDescription = ""
+            )},
             modifier = Modifier
                 .padding(30.dp, 0.dp, 15.dp, 0.dp)
                 .size(185.dp, 50.dp)
