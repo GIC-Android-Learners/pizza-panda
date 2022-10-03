@@ -9,7 +9,6 @@ interface OrderDetailsDao {
     @Query("SELECT * FROM order_details WHERE order_id = :orderId")
     suspend fun getByOrderId(orderId: Int): List<OrderDetailsEntity>
 
-
     @Query("DELETE FROM order_details WHERE order_id = :orderId")
     suspend fun deleteByOrderId(orderId: Int)
 
