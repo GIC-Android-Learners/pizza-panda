@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,6 +21,7 @@ import com.example.pizzapanda.domain.model.Order
 import com.example.pizzapanda.domain.model.OrderDetails
 import com.example.pizzapanda.presentation.user.UserEvent
 import com.example.pizzapanda.presentation.user.UserViewModel
+import com.example.pizzapanda.R
 
 var price = mutableListOf<Int>()
 var qty = mutableListOf<Int>()
@@ -36,12 +38,12 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                 userViewModel.onEvent(UserEvent.ToggleOrderModal(false))
             },
             title = {
-                Text(text = "Your orders")
+                Text(text = stringResource(id = R.string.your_orders))
             },
             text = {
                 Column {
                     if (currentOrder.details.isEmpty()) {
-                        Text(text = "There is no item.")
+                        Text(text = stringResource(id = R.string.there_is_no_item))
                     }
 
                     price = mutableListOf<Int>()
@@ -51,21 +53,18 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                         OrderDetails(orderDetails) { amount ->
                             userViewModel.onEvent(UserEvent.ChangeAmount(orderDetails.menu, amount))
                         }
-
                     }
                     if (currentOrder.details.isNotEmpty()) {
                         Divider(color = Color.Black, thickness = 2.dp)
                         Row() {
                             Column(modifier = Modifier.width(Dp(360f))) {
-                                Text(text = "Total")
+                                Text(text = stringResource(id = R.string.total))
                             }
                             Column() {
                                 Text((total).toString(), fontSize = 15.sp)
                             }
-
                         }
                     }
-
                 }
             },
             confirmButton = {
@@ -81,7 +80,7 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                                 )
                             )
                         }) {
-                        Text("Order")
+                        Text(stringResource(id = R.string.order))
                     }
                 }
             },
@@ -90,7 +89,7 @@ fun FoodOrderModal(userViewModel: UserViewModel = hiltViewModel()) {
                     onClick = {
                         userViewModel.onEvent(UserEvent.ToggleOrderModal(false))
                     }) {
-                    Text("Close")
+                    Text(stringResource(id = R.string.close))
                 }
             }
         )
@@ -121,7 +120,7 @@ fun OrderDetails(
             Row {
                 Column(modifier = Modifier.width(Dp(40f))) {
                     Text(
-                        text = "-",
+                        text = stringResource(id = R.string.minus),
                         fontSize = 30.sp,
                         modifier = Modifier.clickable {
                             onAmountChange(-1)
@@ -143,14 +142,13 @@ fun OrderDetails(
                         .width(Dp(40f))
                 ) {
                     Text(
-                        text = "+",
+                        text = stringResource(id = R.string.plus),
                         fontSize = 30.sp,
                         modifier = Modifier.clickable {
                             onAmountChange(1)
                         }
                     )
                 }
-
             }
         }
         Column(

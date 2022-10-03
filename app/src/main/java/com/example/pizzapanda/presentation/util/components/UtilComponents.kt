@@ -17,7 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.pizzapanda.R
 import com.example.pizzapanda.domain.helper.ImageHelper
 import java.io.File
 
@@ -65,6 +67,6 @@ fun PhotoPicker(originalPhoto: File? = null, onChoose: (Uri) -> Unit) {
         onClick = {
             launcher.launch("image/*")
         }) {
-        Text("Choose Image")
+        Text(stringResource(id = R.string.choose_image))
     }
 }

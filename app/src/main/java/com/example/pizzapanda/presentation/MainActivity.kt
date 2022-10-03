@@ -13,9 +13,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.pizzapanda.R
 import com.example.pizzapanda.presentation.admin.adminComponents.AdminScreen
 import com.example.pizzapanda.presentation.example.ExampleViewModel
 import com.example.pizzapanda.presentation.example.components.ExampleScreen
@@ -32,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var pizzaJuiceFlag = mutableStateOf("pizza")
+        val pizzaJuiceFlag = mutableStateOf("pizza")
 
         setContent {
             PizzaPandaTheme {
@@ -58,7 +60,6 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(Screen.MainScreen.route)
                             }
                         }
-
                         // MSYM
                         composable(route = Screen.AdminScreen.route) {
                             AdminScreen(viewModel = viewModel) {
@@ -113,7 +114,7 @@ fun Greeting(name: String, goToExample: () -> Unit) {
         Button(onClick = {
             goToExample()
         }) {
-            Text(text = "Show Examples")
+            Text(text = stringResource(id = R.string.show_examples))
         }
     }
 }

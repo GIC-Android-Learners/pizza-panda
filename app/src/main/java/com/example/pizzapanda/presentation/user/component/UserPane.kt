@@ -7,12 +7,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.pizzapanda.R
 import com.example.pizzapanda.presentation.user.UserEvent
 import com.example.pizzapanda.presentation.user.UserViewModel
 
@@ -25,7 +27,7 @@ fun UserPane(viewModel: UserViewModel = hiltViewModel()) {
     ) {
         NavBar()
         Text(
-            text = "Pizza Information",
+            text = stringResource(id = R.string.pizza_information),
             fontWeight = FontWeight.ExtraBold,
             fontFamily = FontFamily.Monospace,
             fontSize = 25.sp,
