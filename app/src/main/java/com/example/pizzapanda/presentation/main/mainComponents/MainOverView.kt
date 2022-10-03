@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import com.example.pizzapanda.R
@@ -84,7 +85,7 @@ fun DeleteItems(deleteClick: MutableState<Boolean>, onDelete: () -> Unit) {
                         onDelete()
                         deleteClick.value = false
                     },
-                    text = { Text("Delete") },
+                    text = { Text(stringResource(id = R.string.delete)) },
                     modifier = Modifier
                         .size(150.dp, 50.dp)
                         .padding(0.dp, 0.dp, 20.dp, 10.dp),
@@ -101,7 +102,7 @@ fun DeleteItems(deleteClick: MutableState<Boolean>, onDelete: () -> Unit) {
                     onClick = {
                         deleteClick.value = false
                     },
-                    text = { Text("Cancel") },
+                    text = { Text(stringResource(id = R.string.cancel)) },
                     modifier = Modifier
                         .size(150.dp, 50.dp)
                         .padding(0.dp, 0.dp, 20.dp, 10.dp),
@@ -119,26 +120,22 @@ fun DeleteItems(deleteClick: MutableState<Boolean>, onDelete: () -> Unit) {
 }
 
 @Composable
-fun ScaffoldButtons(goToAdmin: () -> Unit, btn1: String, btn2: String) {
+fun ScaffoldButtons(goToAdmin: () -> Unit, btn1: String) {
     Row {
         ExtendedFloatingActionButton(
             text = { Text(btn1) },
             onClick = {
                 goToAdmin()
             },
-            icon = { Icon(
-                Icons.Filled.Person,
-                contentDescription = ""
-            )},
+            icon = {
+                Icon(
+                    Icons.Filled.Person,
+                    contentDescription = ""
+                )
+            },
             modifier = Modifier
                 .padding(30.dp, 0.dp, 15.dp, 0.dp)
                 .size(185.dp, 50.dp)
-        )
-        ExtendedFloatingActionButton(
-            text = { Text(btn2) },
-            onClick = {
-            },
-            modifier = Modifier.size(185.dp, 50.dp)
         )
     }
 }

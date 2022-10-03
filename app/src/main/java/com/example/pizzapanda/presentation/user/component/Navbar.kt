@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
@@ -15,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,7 +33,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
     val checkOutClick = remember { mutableStateOf(false) }
     Column {
         Text(
-            text = "Food Information",
+            text = stringResource(id = R.string.food_information),
             fontWeight = FontWeight.ExtraBold,
             fontFamily = FontFamily.Monospace,
             fontSize = 26.sp,
@@ -45,7 +44,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                 onClick = {
                     viewModel.onEvent(UserEvent.FlipMenu("pizza"))
                 },
-                text = { Text("Pizza") },
+                text = { Text(stringResource(id = R.string.pizza)) },
                 modifier = Modifier
                     .size(200.dp, 50.dp)
                     .padding(0.dp, 10.dp, 20.dp, 0.dp),
@@ -53,7 +52,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                     Icon(
                         painter = painterResource(id = R.drawable.pizza_png_6),
                         contentDescription = "Favorite",
-                        modifier = Modifier.size(30.dp,30.dp)
+                        modifier = Modifier.size(30.dp, 30.dp)
                     )
                 },
             )
@@ -67,7 +66,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                         contentDescription = "Favorite"
                     )
                 },
-                text = { Text("Juice") },
+                text = { Text(stringResource(id = R.string.juice)) },
                 modifier = Modifier
                     .size(200.dp, 50.dp)
                     .padding(0.dp, 10.dp, 20.dp, 0.dp)
@@ -82,7 +81,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                         contentDescription = "ShoppingCart"
                     )
                 },
-                text = { Text("Order") },
+                text = { Text(stringResource(id = R.string.order)) },
                 modifier = Modifier
                     .size(200.dp, 50.dp)
                     .padding(0.dp, 10.dp, 20.dp, 0.dp)
@@ -102,7 +101,7 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
                         }
                     }
                 },
-                text = { Text("CheckOut") },
+                text = { Text(stringResource(id = R.string.checkout)) },
                 icon = {
                     Icon(
                         Icons.Default.ArrowForward,
@@ -120,16 +119,16 @@ fun NavBar(viewModel: UserViewModel = hiltViewModel()) {
 
 @Composable
 fun Alert() {
-    if (openDialog.value)
+    if (openDialog.value) {
         AlertDialog(
             onDismissRequest = {
                 openDialog.value = false
             },
             title = {
-                if (successfulDialog.value){
-                    Text(text = "Check Out成功しました。")
-                }else{
-                    Text(text = "データがないので、Check Outできません。")
+                if (successfulDialog.value) {
+                    Text(text = stringResource(id = R.string.checkout成功しました))
+                } else {
+                    Text(text = stringResource(id = R.string.no_data_to_checkout))
                 }
             },
             confirmButton = {
@@ -137,8 +136,9 @@ fun Alert() {
                     onClick = {
                         openDialog.value = false
                     }) {
-                    Text("Ok")
+                    Text(stringResource(id = R.string.ok))
                 }
-            },
+            }
         )
+    }
 }

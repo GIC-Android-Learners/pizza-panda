@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,13 +55,13 @@ var allMenuBtnClick = mutableStateOf(true)
 fun CoverImagePartitionFirst(goToMain: () -> Unit) {
     Scaffold(
         floatingActionButton = {
-            ItemScaffoldButton(goToMain,"Back")
+            ItemScaffoldButton(goToMain, "Back")
         }
     ) {
         Surface(modifier = Modifier.background(Color("#ffead1".toColorInt()))) {
             Card(elevation = 20.dp, backgroundColor = Color("#ffead1".toColorInt())) {
                 Image(
-                    painter = painterResource(R.drawable.cover_3),
+                    painter = painterResource(R.drawable.cover_8),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -98,13 +99,7 @@ fun CoverImagePartitionSecond() {
 }
 
 @Composable
-fun ItemScaffoldButton(goToMain: () -> Unit,btn1: String) {
-    val pizzaClick = remember {
-        mutableStateOf(false)
-    }
-    val juiceClick = remember {
-        mutableStateOf(false)
-    }
+fun ItemScaffoldButton(goToMain: () -> Unit, btn1: String) {
     Row {
         Column {
             ExtendedFloatingActionButton(
@@ -112,32 +107,15 @@ fun ItemScaffoldButton(goToMain: () -> Unit,btn1: String) {
                 modifier = Modifier
                     .padding(30.dp, 0.dp, 15.dp, 0.dp)
                     .size(185.dp, 50.dp),
-                icon = { Icon(
-                    Icons.Filled.ExitToApp,
-                    contentDescription = ""
-                )},
-                onClick = {
-                    pizzaClick.value = true
-                    if (pizzaClick.value) {
-                        pizzaBtnClick.value = true
-                        juiceBtnClick.value = false
-                        allMenuBtnClick.value = false
-                    }
+                icon = {
+                    Icon(
+                        Icons.Filled.ExitToApp,
+                        contentDescription = ""
+                    )
                 },
-            )
-        }
-        Column {
-            ExtendedFloatingActionButton(
-                text = { Text(btn2) },
                 onClick = {
-                    juiceClick.value = true
-                    if (juiceClick.value) {
-                        juiceBtnClick.value = true
-                        pizzaBtnClick.value = false
-                        allMenuBtnClick.value = false
-                    }
+                    goToMain()
                 },
-                modifier = Modifier.size(185.dp, 50.dp)
             )
         }
     }
@@ -146,7 +124,7 @@ fun ItemScaffoldButton(goToMain: () -> Unit,btn1: String) {
 @Composable
 fun WelcomeText() {
     Text(
-        text = "Welcome !!!",
+        text = stringResource(id = R.string.welcome),
         color = MaterialTheme.colors.primarySurface,
         fontSize = 40.sp,
         fontStyle = FontStyle.Italic,
@@ -171,7 +149,7 @@ fun AddButton() {
         onClick = {
             addClick.value = true
         },
-        text = { Text("Add") },
+        text = { Text(stringResource(id = R.string.add)) },
         modifier = Modifier
             .size(200.dp, 50.dp)
             .padding(0.dp, 10.dp, 20.dp, 0.dp),
@@ -191,16 +169,16 @@ fun AddButton() {
                 allMenuBtnClick.value = true
             }
         },
-        text = { Text("All Item List") },
+        text = { Text(stringResource(id = R.string.all_item_list)) },
         modifier = Modifier
             .size(200.dp, 50.dp)
             .padding(0.dp, 10.dp, 20.dp, 0.dp),
         icon = {
             Icon(
-                Icons.Filled.AddCircle,
+                Icons.Filled.List,
                 contentDescription = "Favorite"
             )
-        },
+        }
     )
     ItemAddForm(addClick = addClick)
 }
@@ -222,7 +200,7 @@ fun ItemCard(menu: Menu, onDelete: (Menu) -> Unit) {
                 cutoutShape = MaterialTheme.shapes.small.copy(
                     CornerSize(percent = 50)
                 ),
-                backgroundColor = Color.DarkGray,
+                backgroundColor = Color.DarkGray
             ) {
                 ExtendedFloatingActionButton(
                     onClick = { addClick.value = true },
@@ -233,7 +211,7 @@ fun ItemCard(menu: Menu, onDelete: (Menu) -> Unit) {
                         Icon(
                             Icons.Filled.Edit,
                             tint = Color.White,
-                            contentDescription = "Update",
+                            contentDescription = "Update"
                         )
                     }
                 )
@@ -251,7 +229,7 @@ fun ItemCard(menu: Menu, onDelete: (Menu) -> Unit) {
                             contentDescription = "Delete",
                             tint = Color.White
                         )
-                    },
+                    }
                 )
                 DeleteItems(deleteClick = deleteClick) {
                     onDelete(menu)
@@ -273,7 +251,7 @@ fun ItemCard(menu: Menu, onDelete: (Menu) -> Unit) {
             val bitMapImage = ImageHelper.toImageBitMap(photoFile)
             if (bitMapImage === null) {
                 Image(
-                    painter = painterResource(R.drawable.cover_3),
+                    painter = painterResource(R.drawable.cover_8),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -311,7 +289,6 @@ fun PizzaList(adminViewModel: AdminViewModel = hiltViewModel()) {
             cells = GridCells.Fixed(4),
             contentPadding = PaddingValues(8.dp)
         ) {
-
             items(data.size) { menuList ->
                 ItemCard(data[menuList]) {
                     adminViewModel.onEvent(AdminEvent.DeleteMenu(it))
@@ -376,7 +353,6 @@ fun PizzaListForm(
     name: MutableState<String>,
     price: MutableState<String>,
     taste: MutableState<String>,
-    category: MutableState<String>,
     photoUri: MutableState<Uri?>,
     originalPhoto: File? = null
 ) {
@@ -384,7 +360,7 @@ fun PizzaListForm(
         OutlinedTextField(
             value = name.value,
             onValueChange = { name.value = it },
-            label = { Text("Name") },
+            label = { Text(stringResource(id = R.string.name)) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xe0099db6),
                 unfocusedBorderColor = Color.Gray,
@@ -395,7 +371,7 @@ fun PizzaListForm(
         OutlinedTextField(
             value = price.value,
             onValueChange = { price.value = it },
-            label = { Text("Price") },
+            label = { Text(stringResource(id = R.string.price)) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xe0099db6),
                 unfocusedBorderColor = Color.Gray,
@@ -406,7 +382,7 @@ fun PizzaListForm(
         OutlinedTextField(
             value = taste.value,
             onValueChange = { taste.value = it },
-            label = { Text("Taste") },
+            label = { Text(stringResource(id = R.string.taste)) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xe0099db6),
                 unfocusedBorderColor = Color.Gray,
@@ -424,7 +400,6 @@ fun PizzaListForm(
 fun JuiceListForm(
     name: MutableState<String>,
     price: MutableState<String>,
-    category: MutableState<String>,
     photoUri: MutableState<Uri?>,
     originalPhoto: File? = null
 ) {
@@ -432,7 +407,7 @@ fun JuiceListForm(
         OutlinedTextField(
             value = name.value,
             onValueChange = { name.value = it },
-            label = { Text("Name") },
+            label = { Text(stringResource(id = R.string.name)) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xe0099db6),
                 unfocusedBorderColor = Color.Gray,
@@ -443,7 +418,7 @@ fun JuiceListForm(
         OutlinedTextField(
             value = price.value,
             onValueChange = { price.value = it },
-            label = { Text("Price") },
+            label = { Text(stringResource(id = R.string.price)) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xe0099db6),
                 unfocusedBorderColor = Color.Gray,
@@ -493,9 +468,9 @@ fun ItemAddForm(
                 ) {
                     Text(
                         text = if (isEditing) {
-                            "Item Edit Form"
+                            stringResource(id = R.string.item_edit_form)
                         } else {
-                            "Item Insert Form"
+                            stringResource(id = R.string.item_insert_form)
                         },
                         fontFamily = FontFamily.Monospace
                     )
@@ -530,10 +505,10 @@ fun ItemAddForm(
                     }
                     if (selectedOption == "pizza") {
                         category.value = selectedOption
-                        PizzaListForm(name, price, taste, category, photoUri, originalPhoto)
+                        PizzaListForm(name, price, taste, photoUri, originalPhoto)
                     } else {
                         category.value = selectedOption
-                        JuiceListForm(name, price, category, photoUri, originalPhoto)
+                        JuiceListForm(name, price, photoUri, originalPhoto)
                     }
                 }
             },
@@ -576,9 +551,9 @@ fun ItemAddForm(
                     text = {
                         Text(
                             if (isEditing) {
-                                "Edit"
+                                stringResource(id = R.string.edit)
                             } else {
-                                "Add"
+                                stringResource(id = R.string.add)
                             }
                         )
                     },
@@ -598,7 +573,7 @@ fun ItemAddForm(
                     onClick = {
                         addClick.value = false
                     },
-                    text = { Text("Cancel") },
+                    text = { Text(stringResource(id = R.string.cancel)) },
                     modifier = Modifier
                         .size(150.dp, 50.dp)
                         .padding(0.dp, 0.dp, 20.dp, 10.dp),
