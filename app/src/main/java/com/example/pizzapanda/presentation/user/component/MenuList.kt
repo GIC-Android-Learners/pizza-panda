@@ -10,8 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pizzapanda.R
 import com.example.pizzapanda.domain.helper.ImageHelper
@@ -26,7 +29,6 @@ fun MenuList(viewModel: UserViewModel = hiltViewModel(), onMenuClick: (Menu) -> 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray)
             .padding(0.dp, 20.dp, 0.dp, 0.dp),
         verticalArrangement = Arrangement.Top
     ) {
@@ -50,7 +52,7 @@ fun MenuItem(menu: Menu, onClick: (Menu) -> Unit) {
     ) {
         Card(
             elevation = 10.dp,
-            shape = RoundedCornerShape(18.dp),
+            shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
@@ -77,7 +79,9 @@ fun Pizza(menu: Menu) {
         MenuImage(menu.photo)
         MenuName(name = menu.name)
         Description(text = menu.taste)
-        Description(text = menu.meat)
+        if(menu.meat.isNotEmpty()){
+            Description(text = menu.meat)
+        }
         Description(text = menu.price.toString())
     }
 }
@@ -96,15 +100,15 @@ fun MenuImage(photo: String) {
     val fileStorage: FileStorage = LocalFileStorage(LocalContext.current)
     val photoFile = fileStorage.getFile(Directory.Image.path, photo)
     val bitMapImage = ImageHelper.toImageBitMap(photoFile)
-
     Box(
         modifier = Modifier
             .height(90.dp)
             .width(90.dp)
             .offset(
-                x = 40.dp,
-                y = 24.dp
+                x = 30.dp,
+                y = 10.dp
             )
+            .padding(0.dp,0.dp,0.dp,10.dp)
     ) {
         if (bitMapImage === null) {
             Image(
@@ -124,9 +128,9 @@ fun MenuImage(photo: String) {
 fun MenuName(name: String) {
     Text(
         name,
-        textAlign = TextAlign.Justify,
-        modifier = Modifier.padding(0.dp, 30.dp, 0.dp, 0.dp),
-        color = Color.Black
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(Dp(40f), 5.dp, 0.dp, 0.dp),
+        color = Color.Black, fontSize = 20.sp, fontWeight = FontWeight.Medium
     )
 }
 
@@ -134,8 +138,8 @@ fun MenuName(name: String) {
 fun Description(text: String) {
     Text(
         text = text,
-        textAlign = TextAlign.Justify,
-        modifier = Modifier.padding(10.dp, 5.dp, 0.dp, 0.dp),
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(Dp(40f), 5.dp, 0.dp, 0.dp),
         color = Color.Black
     )
 }
