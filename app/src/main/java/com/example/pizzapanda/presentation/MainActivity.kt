@@ -58,6 +58,13 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(Screen.MainScreen.route)
                             }
                         }
+
+                        // MSYM
+                        composable(route = Screen.AdminScreen.route) {
+                            AdminScreen(viewModel = viewModel) {
+                                navController.navigate(Screen.MainScreen.route)
+                            }
+                        }
                         composable(route = Screen.HomeScreen.route) {
                             Greeting("Pizza Panda") {
                                 navController.navigate(Screen.ExampleScreen.route)

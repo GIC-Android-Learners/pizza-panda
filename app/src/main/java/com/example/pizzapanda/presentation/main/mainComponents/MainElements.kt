@@ -51,10 +51,10 @@ var juiceBtnClick = mutableStateOf(false)
 var allMenuBtnClick = mutableStateOf(true)
 
 @Composable
-fun CoverImagePartitionFirst() {
+fun CoverImagePartitionFirst(goToMain: () -> Unit) {
     Scaffold(
         floatingActionButton = {
-            ItemScaffoldButton("Pizza List", "Juice List")
+            ItemScaffoldButton(goToMain,"Back")
         }
     ) {
         Surface(modifier = Modifier.background(Color("#ffead1".toColorInt()))) {
@@ -98,7 +98,7 @@ fun CoverImagePartitionSecond() {
 }
 
 @Composable
-fun ItemScaffoldButton(btn1: String, btn2: String) {
+fun ItemScaffoldButton(goToMain: () -> Unit,btn1: String) {
     val pizzaClick = remember {
         mutableStateOf(false)
     }
@@ -112,6 +112,10 @@ fun ItemScaffoldButton(btn1: String, btn2: String) {
                 modifier = Modifier
                     .padding(30.dp, 0.dp, 15.dp, 0.dp)
                     .size(185.dp, 50.dp),
+                icon = { Icon(
+                    Icons.Filled.ExitToApp,
+                    contentDescription = ""
+                )},
                 onClick = {
                     pizzaClick.value = true
                     if (pizzaClick.value) {
